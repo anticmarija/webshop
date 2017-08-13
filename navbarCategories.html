@@ -1,0 +1,51 @@
+<nav class="navbar navbar">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="">Search products</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lips
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a ng-click ="filters.subcategory_id=1">Lipsticks</a></li>
+          <li><a ng-click ="filters.subcategory_id=2">Lipglosses</a></li>
+          <li><a ng-click ="filters.subcategory_id=3">Pencils</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Face
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a ng-click ="filters.subcategory_id=9">Powders</a></li>
+          <li><a ng-click ="filters.subcategory_id=8">Concealers</a></li>
+          <li><a ng-click ="filters.subcategory_id=7">Foundation</a></li>
+        </ul>
+      </li>
+
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Eyes
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a ng-click ="filters.subcategory_id=4">Eyehadows</a></li>
+          <li><a ng-click ="filters.subcategory_id=5">Eyeliners</a></li>
+          <li><a ng-click ="filters.subcategory_id=6">Mascaras</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tools
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a ng-click="filters.subcategory_id=10">Brushes</a></li>
+        </ul>
+      </li>
+
+      <form class="navbar-form navbar-left">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Search">
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+    </ul>
+  </div>
+</nav>
