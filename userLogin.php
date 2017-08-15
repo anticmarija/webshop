@@ -1,26 +1,27 @@
 <?php 
-
+session_start();
 require_once 'config.php';
 
 global $dbc;
 
-$email = $_POST['email'];
-$password = $_POST['password'];
 
-$stmt = $dbc->prepare("SELECT email,password from users WHERE 
-email='".$email."' && password='".  $password."'");
+// $data=json_encode(file_get_contents("php://input"));
+
+$email =$_POST['email1'];
+$password= $_POST['password1'];
+
+$stmt = $dbc->prepare("SELECT email,password from users WHERE email ='".$email."' && password='".$password."'");
 
 $stmt->execute();
+$podaci=[];
 
-$row = $stmt->rowCount();
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+   $podaci[] = $row;
+}
 
-if ($row > 0){    
-
-    $_SESSION['logged_in'] = true;
-
-
-} else{ 
-    echo 'wrong';
+if(sizeof($podaci) > 0) {
+    $_SESSION['user'] = $email;
+    header('Location: index.php');
 }
 
 ?>

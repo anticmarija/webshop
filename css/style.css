@@ -6,7 +6,7 @@
      border-color: black !important;
 }
 
-.btn-store.outline {
+.btn-store.outline, .addToCartBtn {
     background: #ff69b4;
     border: 2px solid #ff69b4;
     box-shadow: none;
@@ -16,7 +16,7 @@
     transition: all .3s ease-out;
     font-weight: 600;
 }
-.btn-store {
+.btn-store,.addToCartBtn {
     border: none;
     font-family: inherit;
     font-size: 14px;
@@ -30,7 +30,7 @@
     font-weight: 300;
     outline: 0;
     position: relative;
-    background: #23A657;
+    background: #ff69b4;
     color: #fff;
     border-radius: 5px;
     -webkit-transition: all .3s ease-out;
@@ -38,7 +38,7 @@
     transition: all .3s ease-out;
 }
 
-.btn {
+.btn, .addToCartBtn {
     display: inline-block;
     padding: 6px 12px;
     margin-bottom: 0;
@@ -58,4 +58,11 @@
     background-image: none;
     border: 1px solid transparent;
     border-radius: 4px;
+}
+.reviewPanel {
+    position: absolute !important; height: 150px !important; z-index: 100 !important; overflow: scroll !important;
+}
+
+.pinkLink {
+    background: #ff69b4 !important;
 }

@@ -1,5 +1,5 @@
 <!-- Login modal
- --><div id="myModal" class="modal fade" role="dialog">
+ --><div id="myModal" class="modal fade" role="dialog" ng-controller="LoginUser as log">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -9,14 +9,14 @@
         <h4 class="modal-title">Log in</h4>
       </div>
       <div class="modal-body">
-        <form action="userLogin.php" method="post">
+        <form method="post" action="userLogin.php">
           <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" class="form-control" name="email" required>
+            <input type="email" class="form-control"  ng-model="email1" ng-name="email1" name="email1" required>
           </div>
           <div class="form-group">
-            <label for="pwd">Password:</label>
-            <input type="password" class="form-control" name="password" required>
+            <label for="pwd" ng-password="password1" name="password1">Password:</label>
+            <input type="password" class="form-control" ng-model="password1" name="password1" required>
           </div>
 
           <div class="alert alert-danger" ng-show="errorMsg">

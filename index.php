@@ -1,17 +1,9 @@
 <?php
 session_start();
- 
-if(isset($_SESSION['logged_in'])){
-      header('Location: /webshop/loggedInView.html');
+
+if(isset($_SESSION['user'])) {
 }
-
-// if(isset($_GET['product'])) {
-//     $product = $_GET['product'];  /* gets the variable $page */
-
-// }
-//      /* otherwise, include the default page */
 ?>
-
 <!DOCTYPE html>
 <html lang="en" ng-app="store">
   <head>
@@ -32,7 +24,7 @@ if(isset($_SESSION['logged_in'])){
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
   </head>
-  <body ng-controller ="GetProducts as getPCtrl">
+  <body ng-controller ="StoreController as store">
 
     <div ng-include="'navbar.html'"></div>
     
@@ -43,20 +35,80 @@ if(isset($_SESSION['logged_in'])){
     <div ng-include="'registerModal.html'"></div>
 
     <div ng-include="'navbarCategories.html'"></div>
-
              <div class= "container" id="products">
-                    <div class="col-lg-4" ng-repeat="product in products | filter:filters | limitTo : 9" >
-                      <img class="img-circle" src="" alt="" width="140" height="140">
-                      <h2>{{product.name}}</h2>
-                      <p>{{product.short_desc}}</p>
-                      <em class="pull-right">{{product.price | currency}}</em>
-                      <p><a class= "btn btn-default" role="button" style="background-color: #ff69b4;">View details &raquo;</a></p>
+                
+                    <div class="col-lg-6" ng-repeat="product in products | filter:filters | limitTo : 10" >
+                        <img src='{{product.image}}' alt="" width="200" height="200">
+                        <button class="addToCartBtn">
+                        Add to cart <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                        </button>
 
-                </div>           
+                        <h2>{{product.name}}</h2>
+                        <h3 class="pull-right display-3">{{product.price | currency}}</h3>
+
+                        <p>{{product.short_desc}}</p>
+
+              
+                      <section ng-controller="PanelController as panel">
+                        <ul class="nav nav-pills">
+                            <li ng-class="{active: panel.isSelected(1)}">
+                            <a href class="pinkLink" ng-click="panel.selectTab(1)">Description</a></li>
+                            <!-- <li ng-class="{active: panel.isSelected(2)}"><a href ng-click="panel.selectTab(2)">Specifications</a></li> -->
+                            <li ng-class="{active: panel.isSelected(3)}"><a class="pinkLink" href ng-click="panel.selectTab(3)">Reviews</a></li>
+                        </ul>
+
+                        <div class="panel" ng-show="panel.isSelected(1)">
+                            <h4>Description</h4>
+                            <p>{{product.long_desc}}</p>
+                        </div>
+                         <!-- <div class="panel" ng-show="panel.isSelected(2)">
+                            <h4>Specification</h4>
+                            <blockquote>None yet</blockquote>
+                        </div> -->
+                        <div class="panel reviewPanel" ng-show="panel.isSelected(3)">
+                            <h4>Reviews</h4>
+                            <blockquote ng-repeat="review in product.reviews | limitTo: 5">
+                                <b>Stars: {{review.stars}}</b>
+                                {{review.body}}
+                                <cite>by: {{review.author}}</cite>
+                        
+
+                              </blockquote>
+
+                        <form name = "reviewForm" ng-controller="ReviewController as reviewCtrl" ng-submit="reviewForm.$valid && reviewCtrl.addReview(product)" novalidate>
+                        <blockquote>
+                            <b>Stars: {{reviewCtrl.review.stars}}</b>
+                            {{reviewCtrl.review.body}}
+                            <cite>by: {{reviewCtrl.review.author}}</cite>
+                        </blockquote>
+                            <select ng-model="reviewCtrl.review.stars" required>
+                            
+                            <option value="1">1 star</option>
+                            <option value="2">2 star</option>
+                            <option value="3">3 star</option>
+                            <option value="4">4 star</option>
+                            <option value="5">5 star</option>
+                        </select>
+                        <textarea ng-model="reviewCtrl.review.body" required></textarea>
+                        <label>by:</label>
+                        <input ng-model="reviewCtrl.review.author" type="email" name="" required>
+
+<!--                         <div>reviewForm is {{reviewForm.$valid}}</div>
+ -->                        <input type="submit" value="Submit">
+
+                    </form>
+                </div>
+            </section>
+
+                </div> 
+                 &nbsp; &nbsp;  
+                </div>       
             </div>
 
 
-
+<!--             pokusaj da setujem usera
+ -->            <input type="hidden" ng-model="user" name="user" value=<?php if(isset($_SESSION['user'])) {
+  echo $_SESSION['user'];}?>>
 
 
     <div ng-include="'footer.html'"></div>
