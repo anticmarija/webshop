@@ -1,11 +1,11 @@
-<nav class="navbar navbar">
+<nav class="navbar navbar" id="categories">
   <div class="container">
     <div class="navbar-header">
-      <a class="navbar-brand" href="">Search products</a>
+      <a class="navbar-brand" ng-click ="unset()">Search products</a>
     </div>
     <ul class="nav navbar-nav">
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lips
+        <a class="dropdown-toggle" data-toggle="dropdown">Lips
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li><a ng-click ="filters.subcategory_id=1">Lipsticks</a></li>
@@ -14,7 +14,7 @@
         </ul>
       </li>
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Face
+        <a class="dropdown-toggle" data-toggle="dropdown">Face
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li><a ng-click ="filters.subcategory_id=9">Powders</a></li>
@@ -24,7 +24,7 @@
       </li>
 
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Eyes
+        <a class="dropdown-toggle" data-toggle="dropdown">Eyes
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li><a ng-click ="filters.subcategory_id=4">Eyehadows</a></li>
@@ -32,7 +32,7 @@
         </ul>
       </li>
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tools
+        <a class="dropdown-toggle" data-toggle="dropdown">Tools
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li><a ng-click="filters.subcategory_id=5">Brushes</a></li>
@@ -41,9 +41,8 @@
 
       <form class="navbar-form navbar-left">
       <div class="form-group">
-        <input type="text" class="form-control" placeholder="Search">
+        <input type="text" class="form-control" ng-model="filters.name" placeholder="Search">
       </div>
-      <button type="submit" class="btn btn-default">Submit</button>
     </form>
     </ul>
   </div>

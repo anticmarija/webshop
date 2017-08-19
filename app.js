@@ -1,6 +1,21 @@
 (function() {
 
-    var app = angular.module('store', []);
+    var app = angular.module('store', ['ngCookies', 'ngRoute']);
+
+    app.config(['$routeProvider', function($routeProvider) {
+
+        $routeProvider.
+        when('shop', {
+            templateUrl: 'index.html'
+        }).
+        when('cart', {
+            templateUrl: 'cart.html'
+        }).
+        otherwise({
+            redirectTo: 'shop'
+        });
+    }]);
+
 
     app.controller('RegisterUserController', function($scope, $http) {
          this.register = function(){
@@ -27,9 +42,7 @@
 
          });
 
-    
-
-        app.controller('LoginUser', function($scope, $http) {
+           app.controller('LoginUser', function($scope, $http) {
             this.login = function() {
                 console.log($scope.email1);
             var data1 = {'email':$scope.email1, 'password':$scope.password1};           
@@ -48,7 +61,7 @@
 
         });
  
-        app.controller('StoreController', function($scope, $http){
+        app.controller('StoreController', ['$scope', '$http', '$cookieStore', function($scope, $http, $cookieStore){
         // this.products = products;
         $scope.products=[];
             $http.get("getProducts.php")
@@ -61,10 +74,63 @@
 
         $scope.filters = { };
 
-
+        $scope.unset = function(){
+            $scope.filters={};
+        }
         $scope.show = false;
+
+        // $scope.cartProducts =[];
+        $scope.getTotal = 0;
+        $scope.quantity = 1;
+        $scope.cartProducts = [];
+
+        if ($cookieStore.get('cart') != null) {
+            $scope.cartProducts =  $cookieStore.get('cart');
+            console.log($scope.cartProducts);
+            for(var i = 0; i < $scope.cartProducts.length; i++){
+                var cartProduct = $scope.cartProducts[i];
+                $scope.getTotal += (cartProduct.price * cartProduct.quantity);
+            }
+        } 
         
-    });
+        this.addCartProduct = function(product) {
+            var err="";
+            if($scope.cartProducts.length > 0) {
+                for(var i = 0; i < $scope.cartProducts.length; i++){
+                    var cartProduct = $scope.cartProducts[i];
+                    if(cartProduct.name === product.name) {
+                       err="ima ga vec";
+                       break;
+                    }
+                }
+            }  
+            if(err==="") {
+                product['quantity'] = 1;
+                $scope.cartProducts.push(product);
+                $cookieStore.put('cart', $scope.cartProducts);
+            }else {
+                console.log(err);
+            }
+            
+
+            
+        }
+        this.removeItem = function(index) {
+            $scope.cartProducts.splice(index, 1);
+             console.log(index);
+             $cookieStore.put('cart', $scope.cartProducts);
+        }
+
+        this.calculateOrder = function() {
+            var total = 0;
+            for(var i = 0; i < $scope.cartProducts.length; i++){
+                var cartProduct = $scope.cartProducts[i];
+                total += (cartProduct.price * cartProduct.quantity);
+            }
+           $scope.calculateOrder = total;
+        }
+        
+    }]);
 
         app.controller("PanelController", function() {
         this.tab = 1;
@@ -87,7 +153,24 @@
         }
     });
 
- 
+
+
+    // app.controller('ShoppingCart', function($scope) {
+    //     $scope.cartProducts= $cookie.get('cart');
+
+    //     $scope.addCartProduct = function(product) {
+
+    //         $scope.cartProducts.push(product);
+    //         $cookieStore.put('cart', $scopeCartProducts);
+    //     }
+
+    //     $scope.removeItem = function(index) {
+             // $scope.cartProducts.splice(index, 1);
+             // console.log(index);
+    //     }
+    // });
+
+
     // app.controller('LoginUser', function($scope, $http){
     //         $scope.user=[];
     //         var data = {'email':$scope.email, 'password':$scope.password};           

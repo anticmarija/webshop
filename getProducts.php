@@ -14,7 +14,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 for($i = 0; $i<sizeof($data)-1; $i++) {
   $review = [];
     for ($j=0; $j <sizeof($data)-1 ; $j++) { 
-        if($data[$i]['product_id'] === $data[$j]['product_id'] ){
+        if($data[$i]['product_id'] === $data[$j]['product_id'] && $data[$i]['product_id'] !==null){
 
             $review['stars'] = $data[$j]['stars'];
             $review['body'] = $data[$j]['body'];
@@ -40,5 +40,6 @@ for($i=0; $i<=sizeof($data)-2; $i++) {
         }
     }
 
-print json_encode($data);
+ print json_encode($data);
+    // var_dump($data);
 ?>
