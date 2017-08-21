@@ -121,7 +121,9 @@
              $cookieStore.put('cart', $scope.cartProducts);
         }
 
+        $scope.checkout= false;
         this.calculateOrder = function() {
+            $scope.checkout= true;
             var total = 0;
             for(var i = 0; i < $scope.cartProducts.length; i++){
                 var cartProduct = $scope.cartProducts[i];
@@ -129,6 +131,27 @@
             }
            $scope.calculateOrder = total;
         }
+
+        this.saveOrder = function() {
+
+            var data1 = {'emailOrder':$scope.emailOrder, 
+                        'addressOrder':$scope.addressOrder, 
+                        'total' :$scope.calculateOrder,
+                        'cartProducts' : $scope.cartProducts
+                        }; 
+
+               $http({
+                    method: 'POST',
+                    url: 'saveOrder.php',
+                    data: data1,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(success) {
+                   $scope.successMsg = "Details about your order have been sent to your email!";
+                }, function(error){
+                    $scope.errorMsg ="Oooops... we had troubles with saving your order...";
+                }); 
+            }
+        
         
     }]);
 
@@ -144,12 +167,25 @@
         };
     });
 
-    app.controller("ReviewController", function() {
+    app.controller("ReviewController", function($http) {
         this.review={};
 
         this.addReview = function(product) {
-            product.reviews.push(this.review);
-            this.review ={};
+            // product.reviews.push(this.review);
+            var data = this.review;
+            data['product_id'] = product.product_id;
+            console.log(data);
+            $http({
+                    method: 'POST',
+                    url: 'saveReview.php',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(success) {
+                    console.log("good");
+                }, function(error){
+                    console.log("error");
+                }); 
+            
         }
     });
 

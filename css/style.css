@@ -66,3 +66,7 @@
 .pinkLink {
     background: #ff69b4 !important;
 }
+
+em {
+    margin-left: 50% !important;
+}
