@@ -37,10 +37,11 @@
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li><a href="index.html">Home</a></li>
-                <li class="active"><a href="cart"><i class="fa fa-shopping-cart" ng-model="cartProducts"
+                <li class="active"><a href="cart.html"><i class="fa fa-shopping-cart" ng-model="cartProducts"
                 aria-hidden="true" ></i>{{cartProducts.length}} Cart</a></li>
                 
-                <li class="pull-right"><a data-toggle="modal" data-target="#myModal">Log In/Register</a></li>
+                <li ng-if="!user" class="pull-right"><a data-toggle="modal" data-target="#myModal">Log In/Register</a></li>
+                <li ng-if="user"><a href="">Helllooo, {{user}}</a></li>
 
               </ul>
             </div>

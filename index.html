@@ -41,9 +41,15 @@
                         </button>
                         <p ng-model="errorCartMsg">{{errorCartMsg}}</p>
 
-                        <h2>{{product.name}}</h2>
-                        <h3 class="pull-right display-3">{{product.price | currency}}</h3>
-
+                        <div>
+                            <h2>{{product.name}}</h2>
+                            <h3 class="pull-right display-3" ng-show="product.sale == 0">{{product.price | currency}}</h3>
+                        </div>
+                        <div ng-show="product.sale == 1">
+                            <h3 class="pull-right display-3" style="color: red;"> SALE!!! {{product.salePrice | currency}}</h3>
+                            <h4 class="pull-right" style="text-decoration: line-through;">{{product.price | currency}}</h4>
+                        </div>
+                        
                         <blockquote>{{product.short_desc}}</blockquote>
 
                         <section ng-controller="PanelController as panel">

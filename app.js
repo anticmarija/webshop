@@ -5,11 +5,14 @@
     app.config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.
-        when('shop', {
+        when('/shop', {
             templateUrl: 'index.html'
         }).
-        when('cart', {
+        when('/cart', {
             templateUrl: 'cart.html'
+        }).
+         when('/dashboard', {
+            templateUrl: 'dashboard.html'
         }).
         otherwise({
             redirectTo: 'shop'
@@ -42,18 +45,18 @@
 
          });
 
-           app.controller('LoginUser', function($scope, $http) {
+        app.controller('LoginUser', function($scope, $http, $rootScope) {
             this.login = function() {
-                console.log($scope.email1);
-            var data1 = {'email':$scope.email1, 'password':$scope.password1};           
+            var data1 = {'email':$scope.email1, 'password':$scope.password1}; 
+          
                $http({
                     method: 'POST',
                     url: 'userLogin.php',
                     data: data1,
                     headers: {'Content-Type': 'application/json'}
                 }).then(function(success) {
-                    console.log(success.data);
-
+                    $rootScope.user = success.data[0];
+                    console.log($rootScope.user);
                 }, function(error){
                     $scope.errorMsg ="Oooops... login failed!";
                 }); 
@@ -61,8 +64,9 @@
 
         });
  
-        app.controller('StoreController', ['$scope', '$http', '$cookieStore', function($scope, $http, $cookieStore){
-        // this.products = products;
+        app.controller('StoreController', ['$scope', '$http', '$cookieStore', function($scope, $http, $cookieStore, $rootScope){
+        // this.products = products
+
         $scope.products=[];
             $http.get("getProducts.php")
             .then(function(data){
