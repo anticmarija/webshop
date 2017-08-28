@@ -15,11 +15,13 @@
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li class="active"><a href="shop">Home</a></li>
-                <li><a href="cart"><i class="fa fa-shopping-cart" ng-model="cartProducts"
+                <li><a href="#cart"><i class="fa fa-shopping-cart" ng-model="cartProducts"
                 aria-hidden="true"></i>{{cartProducts.length}} Cart</a></li>
                 
                 <li ng-if="!user" class="pull-right"><a data-toggle="modal" data-target="#myModal">Log In/Register</a></li>
                 <li ng-if="user"><a href="">Helllooo, {{user.email}}</a></li>
+                <li ng-if="user && user.isAdmin == 0"><a href="#profile">Your profile</a></li>
+                <li ng-if="user.isAdmin == 1"><a href="#dashboard">Dashboard</a></li>
               </ul>
             </div>
           </div>

@@ -1,0 +1,29 @@
+<div class="container" ng-if="user.isAdmin == 0" id="profile">
+      <h2>Your wishlist <i class="fa fa-heart" aria-hidden="true"></i></h2>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Product image</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="product in wishlistProducts track by $index">
+            <td><img src={{product.image}} width="100px" height="100px"></td>
+            <td> <h3>{{product.name}} </h3>
+                {{product.short_desc}}
+            </td>
+            <td><h3>{{product.price | currency}}</h3></td>
+            <td> <button class="btn btn-primary" ng-click="store.addCartProduct(product); store.removeFromWishlist($index, product.product_id)">Add to cart</button></td>
+            <td>
+              <button class="btn btn-danger" ng-click="store.removeFromWishlist($index, product.product_id)">Remove from wishlist <i class="fa fa-heart-o" aria-hidden="true"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+</div>

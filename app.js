@@ -2,22 +2,22 @@
 
     var app = angular.module('store', ['ngCookies', 'ngRoute']);
 
-    app.config(['$routeProvider', function($routeProvider) {
+    // app.config(['$routeProvider', function($routeProvider) {
 
-        $routeProvider.
-        when('/shop', {
-            templateUrl: 'index.html'
-        }).
-        when('/cart', {
-            templateUrl: 'cart.html'
-        }).
-         when('/dashboard', {
-            templateUrl: 'dashboard.html'
-        }).
-        otherwise({
-            redirectTo: 'shop'
-        });
-    }]);
+    //     $routeProvider.
+    //     when('/shop', {
+    //         templateUrl: 'index.html'
+    //     }).
+    //     when('/cart', {
+    //         templateUrl: 'cart.html'
+    //     }).
+    //      when('/dashboard', {
+    //         templateUrl: 'dashboard.html'
+    //     }).
+    //     otherwise({
+    //         redirectTo: 'shop'
+    //     });
+    // }]);
 
 
     app.controller('RegisterUserController', function($scope, $http) {
@@ -45,7 +45,7 @@
 
          });
 
-        app.controller('LoginUser', function($scope, $http, $rootScope) {
+        app.controller('LoginUser', function($scope, $http, $rootScope, $cookieStore) {
             this.login = function() {
             var data1 = {'email':$scope.email1, 'password':$scope.password1}; 
           
@@ -56,7 +56,13 @@
                     headers: {'Content-Type': 'application/json'}
                 }).then(function(success) {
                     $rootScope.user = success.data[0];
-                    console.log($rootScope.user);
+                    console.log($rootScope.user.isAdmin);
+                    $cookieStore.put('user', $rootScope.user);
+                    console.log($cookieStore.get('user'));
+
+
+                    if ($rootScope.user.isAdmin ==1){
+                    }
                 }, function(error){
                     $scope.errorMsg ="Oooops... login failed!";
                 }); 
@@ -64,11 +70,35 @@
 
         });
  
-        app.controller('StoreController', ['$scope', '$http', '$cookieStore', function($scope, $http, $cookieStore, $rootScope){
+        app.controller('StoreController', ['$scope', '$http', '$cookieStore', '$rootScope', function($scope, $http, $cookieStore, $rootScope){
         // this.products = products
 
         $scope.products=[];
-            $http.get("getProducts.php")
+        $scope.wishlistProducts=[];
+
+
+        $rootScope.user = null;
+        if($cookieStore.get('user') != null ) {
+            $rootScope.user = $cookieStore.get('user');
+            //ovde povuci wishlist
+            var data = {'user_id': $rootScope.user.user_id}
+            $http({
+                    method: 'POST',
+                    url: 'getWishlist.php',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(success) {
+                    if(success.data == "empty") {
+
+                    }else {
+                     $scope.wishlistProducts = success.data;
+                   }
+                }, function(error){
+                    console.log("nije povukao wishlist");
+                }); 
+        }
+
+        $http.get("getProducts.php")
             .then(function(data){
                 $scope.products= data['data'];
                 console.log($scope.products);
@@ -119,13 +149,64 @@
 
             
         }
+
+        this.addWishlistProduct = function(product) {
+             var err="";
+            if($scope.wishlistProducts.length > 0) {
+                for(var i = 0; i < $scope.wishlistProducts.length; i++){
+                    var wishProduct = $scope.wishlistProducts[i];
+                    if(wishProduct.name === product.name) {
+                       err="ima ga vec";
+                       break;
+                    }
+                }
+            }  
+            if(err==="") {
+                $scope.wishlistProducts.push(product);
+                var data = {'product_id': product.product_id, 'user_id':$rootScope.user.user_id};
+                console.log(data);
+                 $http({
+                    method: 'POST',
+                    url: 'saveWishlistItem.php',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(success) {
+                   console.log("otislo");
+                }, function(error){
+                    console.log("faiiil");
+                }); 
+
+            }else {
+                console.log(err);
+            }
+
+        }
+
         this.removeItem = function(index) {
             $scope.cartProducts.splice(index, 1);
              console.log(index);
              $cookieStore.put('cart', $scope.cartProducts);
         }
 
+        this.removeFromWishlist = function(index, product_id) {
+            $scope.wishlistProducts.splice(index, 1);
+            var data ={'product_id' : product_id, 'user_id' : $rootScope.user.user_id};
+            console.log(data);
+            $http({
+                    method: 'POST',
+                    url: 'deleteWishlistItem.php',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(success) {
+                   console.log("otislo za deleete");
+                }, function(error){
+                    console.log("delete puko");
+                }); 
+            console.log($scope.wishlistProducts);
+        }
+
         $scope.checkout= false;
+
         this.calculateOrder = function() {
             $scope.checkout= true;
             var total = 0;
@@ -192,41 +273,5 @@
             
         }
     });
-
-
-
-    // app.controller('ShoppingCart', function($scope) {
-    //     $scope.cartProducts= $cookie.get('cart');
-
-    //     $scope.addCartProduct = function(product) {
-
-    //         $scope.cartProducts.push(product);
-    //         $cookieStore.put('cart', $scopeCartProducts);
-    //     }
-
-    //     $scope.removeItem = function(index) {
-             // $scope.cartProducts.splice(index, 1);
-             // console.log(index);
-    //     }
-    // });
-
-
-    // app.controller('LoginUser', function($scope, $http){
-    //         $scope.user=[];
-    //         var data = {'email':$scope.email, 'password':$scope.password};           
-
-    //           $http({
-    //                 method: 'GET',
-    //                 url: 'userLogin.php',
-    //                 data: data,
-    //                 headers: {'Content-Type': 'application/json'}
-    //             }).then(function(success) {
-    //                 $scope.user = success['data'];
-    //                 console.log($scope.user);
-    //             }, function(error){
-    //                 $scope.errorMsg ="Oooops... Registration failed!";
-    //             }); 
-    //         });
-
 
 })();

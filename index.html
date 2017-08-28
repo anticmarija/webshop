@@ -19,7 +19,6 @@
 
   </head>
   <body ng-app="store">
-
     <div>
 
     <div ng-controller ="StoreController as store">
@@ -39,6 +38,10 @@
                         <button class="addToCartBtn" ng-click="store.addCartProduct(product);">
                         Add to cart <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                         </button>
+                        <button class="btn" ng-click="store.addWishlistProduct(product);" style="color:#ff69b4;" ng-if="user">
+                            Add to wishlist
+                            <i class="fa fa-heart" aria-hidden="true"></i>
+                        </button>
                         <p ng-model="errorCartMsg">{{errorCartMsg}}</p>
 
                         <div>
@@ -56,7 +59,7 @@
                         <ul class="nav nav-pills">
                             <li ng-class="{active: panel.isSelected(1)}">
                             <a href class="pinkLink" ng-click="panel.selectTab(1)">Description</a></li>
-                            <!-- <li ng-class="{active: panel.isSelected(2)}"><a href ng-click="panel.selectTab(2)">Specifications</a></li> -->
+                            
                             <li ng-class="{active: panel.isSelected(3)}"><a class="pinkLink" href ng-click="panel.selectTab(3)">Reviews</a></li>
                         </ul>
 
@@ -64,10 +67,7 @@
                             <h4>Description</h4>
                             <p>{{product.long_desc}}</p>
                         </div>
-                         <!-- <div class="panel" ng-show="panel.isSelected(2)">
-                            <h4>Specification</h4>
-                            <blockquote>None yet</blockquote>
-                        </div> -->
+                        
                         <div class="panel reviewPanel" ng-show="panel.isSelected(3)">
                             <h4>Reviews</h4>
                             <p ng-repeat="review in product.reviews | limitTo: 5">
@@ -106,10 +106,10 @@
                 </div>       
 
 
-<!--             pokusaj da setujem usera
-            <<!-- input type="hidden" ng-model="user" name="user" value=<?php if(isset($_SESSION['user'])) {
-  echo $_SESSION['user'];}?>>
- -->
+    <div ng-include="'cart.html'"></div>
+    <div ng-include="'profile.html'"></div>
+    <div ng-include="'dashboard.html'"></div>
+
     <div ng-include="'footer.html'"></div>
   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

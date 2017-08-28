@@ -1,59 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Cart</title>
-
-     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="">
-      <meta name="author" content="">
-      <link rel="icon" href="images/favicon.ico">
-
-      <!-- Bootstrap core CSS -->
-      <link href="css/bootstrap.min.css" rel="stylesheet">
-
-      <link href="css/carousel.css" rel="stylesheet">
-      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-      <link rel="stylesheet" type="text/css" href="css/style.css">
-
-
-  </head>
-  <body ng-app="store" ng-controller="StoreController as store">
-    <div class="navbar-wrapper">
-      <div class="container">
-
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="index.html">MAKEUP WEBSHOP</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-              <ul class="nav navbar-nav">
-                <li><a href="index.html">Home</a></li>
-                <li class="active"><a href="cart.html"><i class="fa fa-shopping-cart" ng-model="cartProducts"
-                aria-hidden="true" ></i>{{cartProducts.length}} Cart</a></li>
-                
-                <li ng-if="!user" class="pull-right"><a data-toggle="modal" data-target="#myModal">Log In/Register</a></li>
-                <li ng-if="user"><a href="">Helllooo, {{user}}</a></li>
-
-              </ul>
-            </div>
-          </div>
-        </nav>
-
-  </div>
-  </div>
-     &nbsp; &nbsp;  
-      &nbsp; &nbsp;  
-
-    <div class="container" id="cart">
+<div class="container" id="cart">
       <h2>Your shopping cart <i class="fa fa-shopping-cart" ng-model="cartProducts"
                     aria-hidden="true"></i></h2>
       <table class="table table-hover">
@@ -90,10 +35,9 @@
         </tbody>
       </table>
       <button class="btn btn-primary btn-lg"ng-click="store.calculateOrder()">PROCEED TO CHECKOUT</button>
-    </div>
 
     <div ng-show="checkout" class="container">
-      <h2>Your order summary</h3>
+      <h2>Your order summary</h2>
         <h4>Summary<em ng-model="calculateOrder">{{calculateOrder |currency}}</em></h4>
         <h4>Shipping <em> $0.00</em></h4>
         <h4><b>Subtotal<em>{{calculateOrder | currency}}</em></b></h4>
@@ -129,16 +73,9 @@
         </form>
     </div>
 
-      <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
-      <script src="js/angular-cookies.js"></script>
 
 
-      <script src="app.js"></script>
-
-
-  </body>
-</html>
+</div>
 
 
 
