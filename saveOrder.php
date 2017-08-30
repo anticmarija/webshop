@@ -14,7 +14,9 @@ foreach ($result as $key => $value) {
     $max = $value;
 }
 
-$query = "INSERT into orders (order_id, email,address, total) VALUES ( ".++$max.", '".$data->emailOrder."', '".$data->addressOrder."', ".$data->total.")";
+$query = "INSERT into orders (order_id, email,address, total, user_id) VALUES ( ".++$max.", '".$data->emailOrder."', '".$data->addressOrder."', ".$data->total.", ".$data->user->user_id.")";
+
+echo $query;
 
 $stmt2 = $dbc->prepare($query);
 $stmt2->execute();
@@ -23,7 +25,7 @@ $stmt2->execute();
 foreach ($data->cartProducts as $i => $value) {
     $query1 ="INSERT into order_item (product_id, order_id, quantity) VALUES (".$value->product_id.", ".$max.", ".$value->quantity.")";
 
-
+echo $query1;
     $stmt3 = $dbc->prepare($query1);
 
     $stmt3->execute();

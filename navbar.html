@@ -1,4 +1,4 @@
-   <div class="navbar-wrapper">
+   <div class="navbar-wrapper" ng-controller ="LoginUser as login">
       <div class="container">
 
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -22,6 +22,7 @@
                 <li ng-if="user"><a href="">Helllooo, {{user.email}}</a></li>
                 <li ng-if="user && user.isAdmin == 0"><a href="#profile">Your profile</a></li>
                 <li ng-if="user.isAdmin == 1"><a href="#dashboard">Dashboard</a></li>
+                <li ng-if="user" ng-click=login.logout()><a href="">Log out</a></li>
               </ul>
             </div>
           </div>

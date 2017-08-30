@@ -2,24 +2,6 @@
 
     var app = angular.module('store', ['ngCookies', 'ngRoute']);
 
-    // app.config(['$routeProvider', function($routeProvider) {
-
-    //     $routeProvider.
-    //     when('/shop', {
-    //         templateUrl: 'index.html'
-    //     }).
-    //     when('/cart', {
-    //         templateUrl: 'cart.html'
-    //     }).
-    //      when('/dashboard', {
-    //         templateUrl: 'dashboard.html'
-    //     }).
-    //     otherwise({
-    //         redirectTo: 'shop'
-    //     });
-    // }]);
-
-
     app.controller('RegisterUserController', function($scope, $http) {
          this.register = function(){
             if($scope.password !== $scope.passwordAgain) {
@@ -56,16 +38,19 @@
                     headers: {'Content-Type': 'application/json'}
                 }).then(function(success) {
                     $rootScope.user = success.data[0];
-                    console.log($rootScope.user.isAdmin);
                     $cookieStore.put('user', $rootScope.user);
-                    console.log($cookieStore.get('user'));
-
-
-                    if ($rootScope.user.isAdmin ==1){
-                    }
+                    $scope.userEmail = $rootScope.user.email;
                 }, function(error){
                     $scope.errorMsg ="Oooops... login failed!";
                 }); 
+            }
+
+            this.logout = function() {
+                console.log("uslo");
+                $rootScope.user = null;
+                $cookieStore.remove('user');
+                $cookieStore.remove('cart');
+
             }
 
         });
@@ -95,13 +80,24 @@
                    }
                 }, function(error){
                     console.log("nije povukao wishlist");
-                }); 
+                });
+
+             $http({
+                    method: 'POST',
+                    url: 'getAllOrders.php',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(success) {
+                    $scope.orderedProducts = success.data;
+                    console.log($scope.orderedProducts);
+                }, function(error){
+                    console.log("nije povukao orders");
+                });
         }
 
         $http.get("getProducts.php")
             .then(function(data){
                 $scope.products= data['data'];
-                console.log($scope.products);
                 }, function(error){
                 $scope.errorMsg ="We have troubles with connection!";
             });
@@ -188,6 +184,13 @@
              $cookieStore.put('cart', $scope.cartProducts);
         }
 
+        this.emptyCart = function() {
+            $scope.cartProducts = [];
+            $cookieStore.put('cart', $scope.cartProducts);
+            console.log($scope.cartProducts);
+
+        }
+
         this.removeFromWishlist = function(index, product_id) {
             $scope.wishlistProducts.splice(index, 1);
             var data ={'product_id' : product_id, 'user_id' : $rootScope.user.user_id};
@@ -217,13 +220,21 @@
            $scope.calculateOrder = total;
         }
 
-        this.saveOrder = function() {
+        
+        this.saveOrder = function(emailOrder, addressOrder) {
+            $scope.emailOrder=emailOrder;
+            $scope.addressOrder=addressOrder;
 
             var data1 = {'emailOrder':$scope.emailOrder, 
                         'addressOrder':$scope.addressOrder, 
                         'total' :$scope.calculateOrder,
                         'cartProducts' : $scope.cartProducts
                         }; 
+
+            if($rootScope.user) {
+                data1['user'] = $rootScope.user;
+            }
+            console.log(data1);
 
                $http({
                     method: 'POST',
@@ -234,6 +245,20 @@
                    $scope.successMsg = "Details about your order have been sent to your email!";
                 }, function(error){
                     $scope.errorMsg ="Oooops... we had troubles with saving your order...";
+                }); 
+            }
+
+            $scope.addProduct= false;
+
+            this.showProductForm = function() {
+                $scope.addProduct= true;
+                $http({
+                    method: 'GET',
+                    url: 'getAllSubcategories.php',
+                }).then(function(success) {
+                   $scope.subcategories = success.data;
+                }, function(error){
+                    console.log("greska kod ucitavanja combo-a.");
                 }); 
             }
         
