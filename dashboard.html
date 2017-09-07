@@ -1,42 +1,16 @@
 <div ng-if="user.isAdmin ==1" id="dashboard" >
 
+    <div ng-include="'addProductModal.html'"></div>
+    <div ng-include="'addNewUserModal.html'"></div>
+
+
     <div class="container">
         <h3>Admin dashboard</h3>
         <div class="row">
-            <button class="col-lg-3 btn btn" ng-click="store.showProductForm()">Add new product</button>
-            <button class="col-lg-3 col-lg-offset-1 btn btn">Statistics</button>
-        </div>
-
-        <div class="container" id="addProduct" ng-show="addProduct">
-            <form>
-                <div class="form-group col-lg-6">
-                    <label>Product name</label>   
-                    <input class="form-control" type="text" name="name">
-                    <br>
-                    <label>Product price</label>   
-                    <input class="form-control" type="text" name="price">
-                    <br>
-                    <label>Short description</label>   
-                    <input class="form-control" type="text" name="shortDesc"><br>
-                    <label>Long description</label>   
-                    <input class="form-control" type="text" name="longDesc"><br>
-                    <label>On sale</label>   
-                    <select class="form-control">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select><br>
-                    <label>Sale price</label> 
-                    <input class="form-control" type="text" name="salePrice"><br>
-                    <label>Subcategory</label>
-                    <select class="form-control">
-                        <option ng-repeat="subcat in subcategories">{{subcat.subcategory_name}}</option>
-                    </select><br>
-                    <label>Upload image</label>
-                    <input type="file" name="image"><br>
-                    <button class="btn btn-primary">Save product</button>
-                </div>
-            </form>
-
+            <button class="col-lg-2 btn btn">
+                <a data-toggle="modal" data-target="#addProduct" ng-click="store.showProductForm()">Add a new product</a>
+            </button>
+            <button class="col-lg-2 col-lg-offset-1 btn btn"><a data-toggle="modal" data-target="#addNewUser">Add a new user</a></button>
         </div>
     </div>
 </div>

@@ -14,8 +14,12 @@ foreach ($result as $key => $value) {
     $max = $value;
 }
 
-$query = "INSERT into orders (order_id, email,address, total, user_id) VALUES ( ".++$max.", '".$data->emailOrder."', '".$data->addressOrder."', ".$data->total.", ".$data->user->user_id.")";
+if($data->user != null) {
 
+    $query = "INSERT into orders (order_id, email,address, total, user_id) VALUES ( ".++$max.", '".$data->emailOrder."', '".$data->addressOrder."', ".$data->total.", ".$data->user->user_id.")";
+} else {
+    $query = "INSERT into orders (order_id, email,address, total) VALUES ( ".++$max.", '".$data->emailOrder."', '".$data->addressOrder."', ".$data->total.")";
+}
 echo $query;
 
 $stmt2 = $dbc->prepare($query);
@@ -30,7 +34,6 @@ echo $query1;
 
     $stmt3->execute();
 }
-
 
 
 ?>

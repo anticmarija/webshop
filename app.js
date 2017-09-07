@@ -3,6 +3,8 @@
     var app = angular.module('store', ['ngCookies', 'ngRoute']);
 
     app.controller('RegisterUserController', function($scope, $http) {
+
+        $scope.adminOptions = [{name:"Regular user", value:0}, {name:"Admin user", value:1}];
          this.register = function(){
             if($scope.password !== $scope.passwordAgain) {
                 $scope.errorMsg = "Password don't match!";
@@ -10,23 +12,35 @@
 
             else {
                 $scope.errorMsg ="";
-            var data = {'email':$scope.email, 'password':$scope.password};
-             $http({
-                    method: 'POST',
-                    url: 'registerUser.php',
-                    data: data,
-                    headers: {'Content-Type': 'application/json'}
-                }).then(function(success) {
-                    $scope.successMsg = "You've been successfully registered!";
-                }, function(error){
-                    $scope.errorMsg ="Oooops... Registration failed!";
-                }); 
-            }
-           
-         }
 
+
+                if($scope.isAdmin === "") {
+                    var data = {'email':$scope.email, 'password':$scope.password, 'isAdmin':null};
+                }else {
+                    if($scope.isAdmin==="Regular user") {
+                        var data = {'email':$scope.email, 'password':$scope.password, 'isAdmin':0};
+                    }
+                    if($scope.isAdmin==="Admin user") {
+                        var data = {'email':$scope.email, 'password':$scope.password, 'isAdmin':1};
+                    }
+
+                }
+
+                 $http({
+                        method: 'POST',
+                        url: 'registerUser.php',
+                        data: data,
+                        headers: {'Content-Type': 'application/json'}
+                    }).then(function(success) {
+                        $scope.successMsg = "Successfully registered!";
+                    }, function(error){
+                        $scope.errorMsg ="Oooops... Registration failed!";
+                    }); 
+            }
+           }
          });
 
+        
         app.controller('LoginUser', function($scope, $http, $rootScope, $cookieStore) {
             this.login = function() {
             var data1 = {'email':$scope.email1, 'password':$scope.password1}; 
@@ -37,11 +51,18 @@
                     data: data1,
                     headers: {'Content-Type': 'application/json'}
                 }).then(function(success) {
+                    if(success.data[0] != null) {
                     $rootScope.user = success.data[0];
                     $cookieStore.put('user', $rootScope.user);
                     $scope.userEmail = $rootScope.user.email;
+                    $scope.successLogin= "You've been successfully logged in!";
+                    console.log($scope.successLogin);
+                }else {
+                   $scope.errorLogin ="Oooops... login failed!";
+
+                }
                 }, function(error){
-                    $scope.errorMsg ="Oooops... login failed!";
+                    $scope.errorLogin ="Oooops... login failed!";
                 }); 
             }
 
@@ -50,6 +71,7 @@
                 $rootScope.user = null;
                 $cookieStore.remove('user');
                 $cookieStore.remove('cart');
+                $scope.successLogin= "";
 
             }
 
@@ -98,6 +120,7 @@
         $http.get("getProducts.php")
             .then(function(data){
                 $scope.products= data['data'];
+                console.log($scope.products);
                 }, function(error){
                 $scope.errorMsg ="We have troubles with connection!";
             });
@@ -138,13 +161,15 @@
                 product['quantity'] = 1;
                 $scope.cartProducts.push(product);
                 $cookieStore.put('cart', $scope.cartProducts);
+                $scope.addedToCart="Added to cart!";
             }else {
                 console.log(err);
             }
             
-
-            
         }
+        $scope.addedToCart = false;
+        $scope.addedToWishlist = "";
+
 
         this.addWishlistProduct = function(product) {
              var err="";
@@ -233,6 +258,9 @@
 
             if($rootScope.user) {
                 data1['user'] = $rootScope.user;
+            } else {
+             data1['user'] = null;
+
             }
             console.log(data1);
 
@@ -251,6 +279,7 @@
             $scope.addProduct= false;
 
             this.showProductForm = function() {
+                $scope.saleOptions = [{name: "YES", value:1}, {name:"NO", value:0}];
                 $scope.addProduct= true;
                 $http({
                     method: 'GET',
@@ -293,10 +322,90 @@
                 }).then(function(success) {
                     console.log("good");
                 }, function(error){
-                    console.log("error");
-                }); 
+                    $scope.errorReview = "Oooops... Review is not saved!";
+              }); 
             
         }
     });
+
+    app.controller("UploadProductController", function($scope, $http){
+        $scope.uploadFile = function() {
+            var form_data = new FormData();
+
+            if($scope.productOnSale==="YES") {
+                var onSale=1;
+            }else {
+              var onSale=0;
+            }
+
+           for(var i= 0; i <$scope.subcategories.length; i++) {
+                if($scope.productSubcat === $scope.subcategories[i].subcategory_name) {
+                    var idSubcat = $scope.subcategories[i].subcategory_id;
+                }
+            }
+           
+
+            var data = {
+                name: $scope.productName,
+                price: $scope.productPrice,
+                short_desc: $scope.productShortDesc,
+                long_desc: $scope.productLongDesc,
+                on_sale: onSale,
+                salePrice: $scope.productSalePrice,
+                subcat: idSubcat
+            }
+
+            console.log(data);
+
+            angular.forEach($scope.files,function(file){
+                form_data.append('file', file);
+            });
+
+            angular.forEach(data,function(key){
+                form_data.append('data', key);
+            });
+
+
+                 
+                       
+            $http.post('saveProduct.php', form_data,
+            {
+                transformRequest:angular.identity,
+                headers: {'Content-Type': undefined, 'Process-Data':false}
+            }
+                ).then(function(success) {
+                    $scope.successAddProduct = "Product is saved!";
+                   $http({
+                    method: 'POST',
+                    url: 'saveProductDetails.php',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(success) {
+                 
+                }, function(error){
+                    $scope.errorAddProduct= "Oooops... Product is not saved!";
+              }); 
+                }, function(error) {
+
+                });
+        }
+    });
+
+
+    app.directive("fileInput", function($parse) {
+        return {
+            link: function($scope, element, attrs) {
+                element.on("change", function(event){
+                    var files = event.target.files;
+                    console.log(files[0].name);
+
+                   $scope.files = files;
+
+                });
+            }
+        }
+    });
+
+
 
 })();

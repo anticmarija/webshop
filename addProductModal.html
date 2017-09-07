@@ -1,0 +1,63 @@
+<div id="addProduct" class="modal fade" role="dialog" ng-controller = "UploadProductController">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="submit" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add a new product</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="name">Product name:</label>
+            <input type="text" class="form-control"  ng-model="productName" name="productName" required>
+          </div>
+          <div class="form-group">
+            <label for="price">Product price:</label>
+            <input type="text" class="form-control" ng-model="productPrice" name="productPrice" required>
+          </div>
+          <div class="form-group">
+            <label>Short description</label>
+            <input type="text" class="form-control" ng-model="productShortDesc" name="productShortDesc" required>
+          </div>
+          <div class="form-group">
+            <label>Long description</label>
+            <input type="text" class="form-control" ng-model="productLongDesc" name="productLongDesc" required>
+          </div>
+          <div class="form-group">
+            <label>On sale?</label>
+            <select ng-model="productOnSale" class="form-control">
+              <option ng-repeat="sale in saleOptions">{{sale.name}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Sale price</label>
+            <input type="text" class="form-control" ng-model="productSalePrice" name="productSalePrice" required>
+          </div>
+          <div class="form-group">
+            <label>Subcategory</label>
+            <select ng-model="productSubcat" class="form-control">
+              <option ng-repeat="subcat in subcategories">{{subcat.subcategory_name}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Upload an image</label>
+            <input type="file" file-input="files">
+          </div>
+
+          <div class="alert alert-danger" ng-show="errorAddProduct">
+              <span>{{errorAddProduct}}</span>
+          </div>
+          <div class="alert alert-success" ng-show="successAddProduct">  
+            <span>{{successAddProduct}}</span>
+          </div>
+           <div class="modal-footer">
+             <button ng-click="uploadFile()" class="btn btn-primary">Save product</button>
+          </div>
+          </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>
