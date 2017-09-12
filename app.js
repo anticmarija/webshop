@@ -1,6 +1,6 @@
 (function() {
 
-    var app = angular.module('store', ['ngCookies', 'ngRoute']);
+    var app = angular.module('store', ['ngCookies', 'ngRoute', 'chart.js']);
 
     app.controller('RegisterUserController', function($scope, $http) {
 
@@ -111,9 +111,20 @@
                     headers: {'Content-Type': 'application/json'}
                 }).then(function(success) {
                     $scope.orderedProducts = success.data;
-                    console.log($scope.orderedProducts);
+                    // console.log($scope.orderedProducts);
                 }, function(error){
                     console.log("nije povukao orders");
+                });
+                $http({
+                    method: 'POST',
+                    url: 'getUserOrders.php',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(success) {
+                    $scope.userOrders = success.data;
+                    console.log($scope.userOrders);
+                }, function(error){
+                    console.log("nije povukao order items");
                 });
         }
 
@@ -125,7 +136,25 @@
                 $scope.errorMsg ="We have troubles with connection!";
             });
 
+            $http.get("getUsers.php")
+            .then(function(data){
+                $scope.users= data['data'];
+                // console.log($scope.users);
+                }, function(error){
+                    console.log("Greska sa userima!");
+            });
+
+            $http.get("getSales.php")
+            .then(function(data){
+                $scope.imena= data['data']['imena'];
+                $scope.prodaja =data['data']['prodaja']; 
+                }, function(error){
+                    console.log("Greska sa sales!");
+            });
+
         $scope.filters = { };
+
+       
 
         $scope.unset = function(){
             $scope.filters={};
@@ -290,8 +319,41 @@
                     console.log("greska kod ucitavanja combo-a.");
                 }); 
             }
+
+            this.deleteProduct = function(index, product_id) {
+            var data ={'product_id' : product_id};
+            console.log(data);
+            $http({
+                    method: 'POST',
+                    url: 'deleteProduct.php',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(success) {
+                    $scope.products.splice(index, 1);
+
+                }, function(error){
+                    console.log("delete puko");
+                }); 
+        }
         
-        
+        this.deleteUser = function(index, user_id) {
+            var data ={'user_id' : user_id};
+            console.log(data);
+            $http({
+                    method: 'POST',
+                    url: 'deleteUser.php',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(success) {
+                    $scope.users.splice(index, 1);
+
+                }, function(error){
+                    console.log("delete puko");
+                }); 
+        }
+
+        $scope.filtersAdmin ={ };
+
     }]);
 
         app.controller("PanelController", function() {
@@ -390,6 +452,7 @@
                 });
         }
     });
+
 
 
     app.directive("fileInput", function($parse) {

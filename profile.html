@@ -48,5 +48,33 @@
         </tbody>
       </table>
 
+      <h2>Your previous orders:</h2>
+     <!--  <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Product image</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th></th>
+          </tr>
+        </thead> -->
+<!--         <tbody>
+ -->      <div class="row" ng-repeat="order in userOrders" ng-show="order.order_items">
+            <h3>Ordered on: {{order.CreatedOn}}</h3>
+            <h5>Email: {{order.email}}</h5>
+            <h5> Shipping address: {{order.address}}</h5>
+            <h5>Total: {{order.total | currency}}</h5>
+            
+            <div class="col-md-2" ng-repeat= "products in order.order_items">
+              <p>Product: <b>{{products.name}}</b></p>
+              <p>Quantity: <b>{{products.quantity}}</b></p>
+              <p>Price: <b>{{products.price | currency}}</b></p>
+              <img src={{products.image}} height="100px" width="100px">
+            </div>
+          </div>
+          <hr>
+    
+
+
 
 </div>

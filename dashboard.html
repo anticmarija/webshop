@@ -1,4 +1,4 @@
-<div ng-if="user.isAdmin ==1" id="dashboard" >
+<div ng-if="user.isAdmin ==1" id="dashboard" ng-controller="StoreController">
 
     <div ng-include="'addProductModal.html'"></div>
     <div ng-include="'addNewUserModal.html'"></div>
@@ -12,5 +12,56 @@
             </button>
             <button class="col-lg-2 col-lg-offset-1 btn btn"><a data-toggle="modal" data-target="#addNewUser">Add a new user</a></button>
         </div>
+
+        <h3>Products</h3>
+        <div class="row">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" ng-model="filtersAdmin.name" placeholder="Search">
+                </div>
+            </form>
+        </div>  
+        <div style="overflow: scroll; height: 400px;"> 
+
+            <table class="table table-hover">
+                <th>Product name</th>
+                <th>Image</th>
+                <th>Product price</th>
+                <th>Short description</th>
+                <th>Long description</th>
+                <th>Delete</th>
+
+                <tr ng-repeat="product in products | filter:filtersAdmin">
+                    <td>{{product.name}}</td>
+                    <td><img src={{product.image}} width="100px" height="100px"></td>
+                    <td>{{product.price| currency}}</td>
+                    <td>{{product.short_desc}}</td>
+                    <td>{{product.long_desc}}</td>
+                    <td><button class="btn btn-danger" ng-click="store.deleteProduct($index, product.product_id)">Delete product</button></td>
+                </tr>
+            </table>
+            </div>
+        <h3>Users</h3>
+        <div style="overflow: scroll; height: 200px;"> 
+
+            <table class="table table-hover">
+                <th>User email</th>
+                <th>Password</th>
+                <th>Is Admin?</th>
+
+                <tr ng-repeat="user in users track by $index">
+                    <td>{{user.email}}</td>
+                    <td>{{user.password}}</td>
+                    <td>{{user.isAdmin}}</td>
+                    <td><button class="btn btn-danger" ng-click="store.deleteUser($index, user.user_id)">Delete user</button></td>
+                </tr>
+            </table>
+            </div>
+        <h3>Statistics</h3>
+        <canvas id="doughnut" class="chart chart-doughnut"
+          chart-data="prodaja" chart-labels="imena">
+        </canvas>
     </div>
+
+    
 </div>
